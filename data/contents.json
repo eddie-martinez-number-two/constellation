@@ -1,4 +1,5 @@
 [
+"adobe/brackets",
 "angular/angular.js",
 "atom/atom",
 "bartaz/impress.js",
@@ -9,6 +10,7 @@
 "FortAwesome/Font-Awesome",
 "h5bp/html5-boilerplate",
 "Homebrew/homebrew",
+"jashkenas/backbone",
 "joyent/node",
 "jquery/jquery",
 "mbostock/d3",
