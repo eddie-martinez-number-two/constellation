@@ -3,20 +3,21 @@
 <head>
     <title>Constellation</title>
     <meta charset="utf-8"/>
-    <link rel="icon" href="images/favicon.ico">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="images/favicon.ico"/>
+    <link rel="stylesheet" href="styles.css"/>
     <link rel="stylesheet" href="third_party/leaflet/leaflet.css"/>
+    <link rel="stylesheet" href="third_party/leaflet.markercluster/MarkerCluster.Default.css"/>
+    <link rel="stylesheet" href="third_party/leaflet.markercluster/MarkerCluster.css"/>
     <script src="third_party/leaflet/leaflet.js"></script>
-    <script src="third_party/leaflet-heat.js"></script>
+    <script src="third_party/leaflet.markercluster/leaflet.markercluster.js"></script>
     <script src="third_party/reqwest.min.js"></script>
 </head>
 <body>
 
-<div id="map">
-    <div id="wrapper">
-        <select id="repos" onchange="main(event);"></select>
-    </div>
+<div id="side">
+    <select size="2" id="repos" onchange="main(event);"></select>
 </div>
+<div id="map"></div>
 
 <script>
     reqwest({
@@ -29,8 +30,6 @@
             select.options[select.options.length] = new Option(data[i], 'data/' + data[i] + '.json');
         }
         select.selectedIndex = -1;
-    }).fail(function (err) {
-        console.error(err);
     });
 </script>
 
@@ -45,7 +44,9 @@
         maxZoom: 15
     }).setView([55.796941, 37.537688], 3);
 
-    new L.Control.Zoom({position: 'topright'}).addTo(map);
+    var markers = L.markerClusterGroup();
+
+    L.control.zoom({position: 'topright'}).addTo(map);
 
     L.tileLayer('http://otile{s}.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.jpg', {
         attribution: 'Data, imagery and map information provided by MapQuest, <a href="http://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> and contributors, <a href="http://wiki.openstreetmap.org/wiki/Legal_FAQ#3a._I_would_like_to_use_OpenStreetMap_maps._How_should_I_credit_you.3F" target="_blank">ODbL</a>',
@@ -54,29 +55,27 @@
         subdomains: '1234'
     }).addTo(map);
 
-    var heat;
-
     function main(e) {
-        if (heat) {
-            map.removeLayer(heat);
-        }
+        map.removeLayer(markers);
+
         reqwest({
             method: 'GET',
             type: 'json',
             url: e.target.value
         }).then(function (data) {
-            var out = [];
+            var markerList = [];
             for (var key in data) {
                 if (data.hasOwnProperty(key)) {
-                    out.push(data[key]);
+                    var marker = L.marker(L.latLng(data[key][0], data[key][1]));
+                    marker.bindPopup('<a target="_blank" href="https://github.com/' + key + '">' + key + '</a>');
+                    markerList.push(marker);
                 }
             }
-            heat = L.heatLayer(out, {
-                minOpacity: 0.4,
-                radius: 15
-            }).addTo(map);
-        }).fail(function (err) {
-            console.error(err);
+            markers = L.markerClusterGroup({
+                chunkedLoading: true,
+                showCoverageOnHover: false
+            });
+            markers.addLayers(markerList).addTo(map);
         });
     }
 </script>

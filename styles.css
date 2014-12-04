@@ -3,17 +3,28 @@ html, body {
     height: 100%;
     margin: 0;
     padding: 0;
-    background-color: #C7C7C7;
+    background-color: #ffffff;
 }
 
 #map {
-    width: 100%;
+    width: auto;
     height: 100%;
-    background-color: #C7C7C7;
+    background-color: inherit;
 }
 
-#wrapper {
-    margin: 5px;
-    position: absolute;
-    z-index: 1;
+#side {
+    float: left;
+    width: 200px;
+    height: 100%;
+}
+
+select {
+    width: 200px;
+    height: 100%;
+    border: 0;
+    background-color: inherit;
+}
+
+option {
+    padding: 5px 5px 5px;
 }
