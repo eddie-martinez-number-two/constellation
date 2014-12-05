@@ -44,7 +44,10 @@
         maxZoom: 15
     }).setView([55.796941, 37.537688], 3);
 
-    var markers = L.markerClusterGroup();
+    var markers = L.markerClusterGroup({
+        chunkedLoading: true,
+        showCoverageOnHover: false
+    });
 
     L.control.zoom({position: 'topright'}).addTo(map);
 
@@ -71,10 +74,6 @@
                     markerList.push(marker);
                 }
             }
-            markers = L.markerClusterGroup({
-                chunkedLoading: true,
-                showCoverageOnHover: false
-            });
             markers.addLayers(markerList).addTo(map);
         });
     }
