@@ -60,6 +60,7 @@
 
     function main(e) {
         map.removeLayer(markers);
+        markers.clearLayers();
 
         reqwest({
             method: 'GET',
