@@ -49,6 +49,8 @@
         showCoverageOnHover: false
     });
 
+    var request;
+
     L.control.zoom({position: 'topright'}).addTo(map);
 
     L.tileLayer('http://otile{s}.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.jpg', {
@@ -59,10 +61,13 @@
     }).addTo(map);
 
     function main(e) {
+        if (request) {
+            request.abort();
+        }
         map.removeLayer(markers);
         markers.clearLayers();
 
-        reqwest({
+        request = reqwest({
             method: 'GET',
             type: 'json',
             url: e.target.value
